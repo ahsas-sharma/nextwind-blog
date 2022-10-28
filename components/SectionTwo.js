@@ -1,46 +1,37 @@
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import Author from "./_child/Author";
-import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Autoplay } from "swiper";
-import "swiper/css";
 
-export default function SectionOne() {
-  SwiperCore.use([Autoplay]);
-  const bg = {
-    background: "url('/images/banner.png') no-repeat",
-    backgroundPosition: "right",
-  };
+export default function SectionTwo() {
   return (
-    <section className="py-16" style={bg}>
-      <div className="container mx-auto md:px-20">
-        <h1 className="font-bold text-4xl pb-12 text-center">Trending</h1>
-        <Swiper
-          slidesPerView={1}
-          autoplay={{
-            delay: 2000,
-          }}
-        >
-          <SwiperSlide>{slide()}</SwiperSlide>
-          <SwiperSlide>{slide()}</SwiperSlide>
-          <SwiperSlide>{slide()}</SwiperSlide>
-        </Swiper>
+    <section className="container mx-auto md:px-20 py-10">
+      <h1 className="font-bold text-4xl py-12 text-center">Latest Posts</h1>
+      {/* GRID COLUMNS */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
+        {post()} {post()} {post()}
+        {post()} {post()} {post()}
       </div>
     </section>
   );
 }
 
-function slide() {
+function post() {
   return (
-    <div className="grid md:grid-cols-2">
-      <div className="image">
+    <div className="item">
+      <div className="images">
         <Link href={"/"}>
           <a>
-            <Image src={"/images/img1.jpg"} width="600" height="600" alt="" />
+            <Image
+              src={"/images/img1.jpg"}
+              width="500"
+              height="350"
+              alt=""
+              className="rounded"
+            />
           </a>
         </Link>
       </div>
-      <div className="info flex justify-center flex-col mx-10">
+      <div className="info flex justify-center flex-col py-4">
         <div className="cat">
           <Link href={"/"}>
             <a className="text-orange-600 hover:text-orange-800">
@@ -55,7 +46,7 @@ function slide() {
         </div>
         <div className="title">
           <Link href={"/"}>
-            <a className="text-3xl md:text-6xl font-bold text-gray-800 hover:text-gray-600">
+            <a className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-gray-600">
               Your most unhappy customers are your greatest source of learning.
             </a>
           </Link>
