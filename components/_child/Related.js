@@ -1,25 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import Author from "./Author";
-export default function Related() {
+export default function Related({ post }) {
   return (
     <section className="pt-20">
       <h1 className="font-bold text-3xl py-10">Related</h1>
-      <div className="flex flex-col gap-10">{post()}</div>
+      <div className="flex flex-col gap-10">
+        <Post data={post} />
+      </div>
     </section>
   );
 }
 
-function post() {
+function Post({ data }) {
+  const { id, category, img, published, author, title, subtitle, description } =
+    data;
   return (
     <div className="flex gap-5">
       <div className="image flex flex-col justify-start">
-        <Link href={"/"}>
+        <Link href={`/posts/${id}`}>
           <a>
             <Image
-              src={"/images/img1.jpg"}
+              src={img || "/"}
               className="rounded"
-              width="300"
+              width="500"
               height="300"
               alt=""
             />
@@ -28,25 +32,18 @@ function post() {
       </div>
       <div className="info flex justify-center flex-col">
         <div className="cat">
-          <Link href={"/"}>
-            <a className="text-orange-600 hover:text-orange-800">
-              Business, Travel{" "}
-            </a>
-          </Link>
-          <Link href={"/"}>
-            <a className="text-gray-600 hover:text-gray-800">
-              - October 27, 2022
-            </a>
-          </Link>
+          <a className="text-orange-600 hover:text-orange-800">{category}</a>
+
+          <a className="text-gray-600 hover:text-gray-800">- {published}</a>
         </div>
         <div className="title">
-          <Link href={"/"}>
+          <Link href={`/posts/${id}`}>
             <a className="text-xl font-bold text-gray-800 hover:text-gray-600">
-              Your most unhappy customers are your greatest source of learning.
+              {title}
             </a>
           </Link>
         </div>
-        <Author />
+        {author ? <Author /> : <></>}
       </div>
     </div>
   );

@@ -4,8 +4,15 @@ import Author from "./_child/Author";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from "swiper";
 import "swiper/css";
+import Spinner from "./_child/Spinner";
+import Error from "./_child/Error";
+import useFetcher from "../lib/fetcher";
 
 export default function SectionOne() {
+  const { data, isLoading, isError } = useFetcher("/api/trending");
+  if (isLoading) return <Spinner />;
+  if (isError) return <Error />;
+
   SwiperCore.use([Autoplay]);
   const bg = {
     background: "url('/images/banner.png') no-repeat",
@@ -21,52 +28,45 @@ export default function SectionOne() {
             delay: 2000,
           }}
         >
-          <SwiperSlide>{slide()}</SwiperSlide>
-          <SwiperSlide>{slide()}</SwiperSlide>
-          <SwiperSlide>{slide()}</SwiperSlide>
+          {data.map((data, index) => (
+            <SwiperSlide key={index}>{Slide((data = { data }))}</SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </section>
   );
 }
 
-function slide() {
+function Slide({ data }) {
+  const { id, category, img, published, author, title, subtitle } = data;
+
   return (
     <div className="grid md:grid-cols-2">
       <div className="image">
-        <Link href={"/"}>
+        <Link href={`/posts/${id}`}>
           <a>
-            <Image src={"/images/img1.jpg"} width="600" height="600" alt="" />
+            <Image src={img || "/"} width="600" height="600" alt="" />
           </a>
         </Link>
       </div>
       <div className="info flex justify-center flex-col mx-10">
         <div className="cat">
-          <Link href={"/"}>
-            <a className="text-orange-600 hover:text-orange-800">
-              Business, Travel{" "}
-            </a>
-          </Link>
-          <Link href={"/"}>
-            <a className="text-gray-600 hover:text-gray-800">
-              - October 27, 2022
-            </a>
-          </Link>
+          <a className="text-orange-600 hover:text-orange-800">
+            {category || "Unknown"}{" "}
+          </a>
+          <a className="text-gray-600 hover:text-gray-800">
+            - {published || "Unknown"}
+          </a>
         </div>
         <div className="title">
-          <Link href={"/"}>
+          <Link href={`/posts/${id}`}>
             <a className="text-3xl md:text-6xl font-bold text-gray-800 hover:text-gray-600">
-              Your most unhappy customers are your greatest source of learning.
+              {title || "Unknown"}
             </a>
           </Link>
         </div>
-        <p className="text-gray-500 py-3">
-          This is some random text that goes below the main title. Ideally,
-          there should be a lot to learn from unhappy customers. But we often
-          become so defensive and try our level best to avoid any sort of
-          criticism that many of these learning opportunities simply disappear.
-        </p>
-        <Author />
+        <p className="text-gray-500 py-3">{subtitle || "Unknown"}</p>
+        {author ? <Author /> : <></>}
       </div>
     </div>
   );

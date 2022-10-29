@@ -32,12 +32,16 @@ export default function Footer() {
               </a>
             </Link>
           </div>
-          <p className="py-5 text-gray-400">
-            {" "}
-            Copyright © 2022 All rights reserved ||| This template was made
-            possible by Daily Tution&apos;s awesome tutorials on Youtube.
-          </p>
-          <p className="text-gray-400 text-center"> Terms & Conditions</p>
+          <div className="text-center">
+            <p className="pt-5 text-gray-600 ">
+              Copyright © 2022 All rights reserved
+            </p>
+            <p className="py-1 text-gray-600">
+              This template was made possible by Daily Tution&apos;s awesome
+              tutorials on Youtube.
+            </p>
+            <p className="text-gray-400 text-center">Terms & Conditions</p>
+          </div>
         </div>
       </div>
     </footer>

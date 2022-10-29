@@ -1,30 +1,40 @@
 import Link from "next/link";
 import Image from "next/image";
 import Author from "./_child/Author";
+import Spinner from "./_child/Spinner";
+import Error from "./_child/Error";
+import useFetcher from "../lib/fetcher";
 
 export default function SectionTwo() {
-  return (
-    <section className="container mx-auto md:px-20 py-10">
-      <h1 className="font-bold text-4xl py-12 text-center">Latest Posts</h1>
-      {/* GRID COLUMNS */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
-        {post()} {post()} {post()}
-        {post()} {post()} {post()}
-      </div>
-    </section>
-  );
+  const { data, isLoading, isError } = useFetcher("/api/posts");
+  if (isLoading) return <Spinner />;
+  if (isError) return <Error />;
+  if (data) {
+    return (
+      <section className="container mx-auto md:px-20 py-10">
+        <h1 className="font-bold text-4xl py-12 text-center">Latest Posts</h1>
+        {/* GRID COLUMNS */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
+          {data.map((value, index) => (
+            <Post data={value} key={value.id} />
+          ))}
+        </div>
+      </section>
+    );
+  }
 }
 
-function post() {
+function Post({ data }) {
+  const { id, category, img, published, author, title, subtitle } = data;
   return (
     <div className="item">
       <div className="images">
-        <Link href={"/"}>
+        <Link href={`/posts/${id}`}>
           <a>
             <Image
-              src={"/images/img1.jpg"}
+              src={img || "/"}
               width="500"
-              height="350"
+              height="300"
               alt=""
               className="rounded"
             />
@@ -33,31 +43,18 @@ function post() {
       </div>
       <div className="info flex justify-center flex-col py-4">
         <div className="cat">
-          <Link href={"/"}>
-            <a className="text-orange-600 hover:text-orange-800">
-              Business, Travel{" "}
-            </a>
-          </Link>
-          <Link href={"/"}>
-            <a className="text-gray-600 hover:text-gray-800">
-              - October 27, 2022
-            </a>
-          </Link>
+          <a className="text-orange-600 hover:text-orange-800">{category}</a>
+          <a className="text-gray-600 hover:text-gray-800">- {published}</a>
         </div>
         <div className="title">
-          <Link href={"/"}>
+          <Link href={`/posts/${id}`}>
             <a className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-gray-600">
-              Your most unhappy customers are your greatest source of learning.
+              {title}
             </a>
           </Link>
         </div>
-        <p className="text-gray-500 py-3">
-          This is some random text that goes below the main title. Ideally,
-          there should be a lot to learn from unhappy customers. But we often
-          become so defensive and try our level best to avoid any sort of
-          criticism that many of these learning opportunities simply disappear.
-        </p>
-        <Author />
+        <p className="text-gray-500 py-3">{subtitle}</p>
+        {author ? <Author /> : <></>}
       </div>
     </div>
   );
